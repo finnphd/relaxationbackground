@@ -1,64 +1,46 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Audio Player with Background Noise</title>
-</head>
-<body>
-    <svg id="play" viewBox="0 0 200 200" style="margin: auto; width: 90vw; height: 90vh">
-        <circle cx="100" cy="100" r="100" />
-        <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
-    </svg>
+<svg id="play" viewBox="0 0 200 200" style="margin: auto; width: 90vw; height: 90vh">
+    <circle cx="100" cy="100" r="100" />
+    <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
+</svg>
 
-    <div id="noise-selector">
-        <button id="play-white-noise">Play White Noise</button>
-    </div>
+<audio id="backgroundAudio" src="background.mp3" loop></audio>
 
-    <script>
-        // Existing code for audio playback
-        if (typeof Audio !== "undefined") {
-            const audioObj = new Audio("./Responsive Hypnosis Example.mp3");
-            const playButton = document.getElementById('play');
+<script>
+    let audioObj = new Audio("./Responsive Hypnosis Example.mp3");
+    let playButton = document.getElementById('play');
+    let backgroundAudio = document.getElementById('backgroundAudio');
 
-            // ... (Existing code for audio playback)
+    // Set the background audio volume (from 0 to 1)
+    backgroundAudio.volume = 0.5;
 
-            audioObj.addEventListener('error', function () {
-                console.error('Audio could not be loaded.');
-            });
+    playButton.addEventListener('mousedown', startAudio);
+    playButton.addEventListener('mouseup', stopAudio);
+    playButton.addEventListener('touchstart', startAudio);
+    playButton.addEventListener('touchend', stopAudio);
 
-            // Function to generate background noise
-            function generateWhiteNoise() {
-                const context = new (window.AudioContext || window.webkitAudioContext)();
-                const bufferSize = context.sampleRate * 2;
-                const noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
-                const output = noiseBuffer.getChannelData(0);
-
-                for (let i = 0; i < bufferSize; i++) {
-                    output[i] = Math.random() * 2 - 1;
-                }
-
-                const whiteNoiseSource = context.createBufferSource();
-                whiteNoiseSource.buffer = noiseBuffer;
-                whiteNoiseSource.loop = true;
-                whiteNoiseSource.connect(context.destination);
-                whiteNoiseSource.start();
-
-                return whiteNoiseSource;
-            }
-
-            // Event listener for the "Play White Noise" button
-            const whiteNoiseButton = document.getElementById('play-white-noise');
-            whiteNoiseButton.addEventListener('click', () => {
-                if (noiseNode) {
-                    noiseNode.stop();
-                }
-                noiseNode = generateWhiteNoise();
-            });
-
-            let noiseNode;
-
-        } else {
-            console.error("Audio is not supported in this browser.");
+    // Add event listeners for the spacebar key
+    document.addEventListener('keydown', function (event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            startAudio(event);
         }
-    </script>
-</body>
-</html>
+    });
+
+    document.addEventListener('keyup', function (event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            stopAudio(event);
+        }
+    });
+
+    function startAudio(e) {
+        e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
+        audioObj.play();
+        playButton.style.margin = "10px";
+        backgroundAudio.play();
+    }
+
+    function stopAudio() {
+        audioObj.pause();
+        playButton.style.margin = "0";
+        backgroundAudio.pause();
+    }
+</script>
