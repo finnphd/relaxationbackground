@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <select id="backgroundAudioSelect">
+        <option value="background1.mp3">Background Audio 1</option>
+        <option value="background2.mp3">Background Audio 2</option>
+        <!-- Add more options for background audio files -->
+    </select>
+
+    <svg id="play" viewBox="0 0 200 200" style="margin: auto; width: 90vw; height: 90vh">
+        <circle cx="100" cy="100" r="100" />
+        <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
+    </svg>
+
+    <script>
+        // Initialize background audio object
+        let backgroundAudio = new Audio();
+        let mainAudio = new Audio("./mainAudio.mp3"); // Replace with your main audio file
+
+        // Function to set the background audio source
+        function setBackgroundAudio() {
+            const select = document.getElementById('backgroundAudioSelect');
+            backgroundAudio.src = select.value;
+            backgroundAudio.load();
+            backgroundAudio.loop = true; // Loop the background audio
+        }
+
+        // Event listener for background audio selection
+        document.getElementById('backgroundAudioSelect').addEventListener('change', setBackgroundAudio);
+
+        // Function to start main audio
+        function startAudio(e) {
+            e.preventDefault(); // Prevent the default behavior
+            mainAudio.play();
+        }
+
+        // Function to stop main audio
+        function stopAudio() {
+            mainAudio.pause();
+        }
+
+        // Event listeners for user interactions
+        document.addEventListener('keydown', function (event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                startAudio(event);
+            }
+        });
+
+        document.addEventListener('keyup', function (event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                stopAudio(event);
+            }
+        });
+
+        document.getElementById('play').addEventListener('mousedown', startAudio);
+        document.getElementById('play').addEventListener('mouseup', stopAudio);
+        document.getElementById('play').addEventListener('touchstart', startAudio);
+        document.getElementById('play').addEventListener('touchend', stopAudio);
+
+        // Initially set the background audio
+        setBackgroundAudio();
+    </script>
+</body>
+</html>
