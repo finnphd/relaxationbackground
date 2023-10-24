@@ -11,8 +11,6 @@
 
     <div id="noise-selector">
         <button id="play-white-noise">Play White Noise</button>
-        <button id="play-pink-noise">Play Pink Noise</button>
-        <button id="play-brownian-noise">Play Brownian Noise</button>
     </div>
 
     <script>
@@ -28,70 +26,36 @@
             });
 
             // Function to generate background noise
-            function generateNoise(type) {
+            function generateWhiteNoise() {
                 const context = new (window.AudioContext || window.webkitAudioContext)();
-
-                // Create a noise source node
-                const noiseNode = context.createBufferSource();
-                noiseNode.loop = true;
-
-                // Create a buffer to store the noise data
                 const bufferSize = context.sampleRate * 2;
-                const buffer = context.createBuffer(1, bufferSize, context.sampleRate);
-                const data = buffer.getChannelData(0);
+                const noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
 
-                // Generate noise data based on the selected type
                 for (let i = 0; i < bufferSize; i++) {
-                    if (type === 'white') {
-                        data[i] = Math.random() * 2 - 1;
-                    } else if (type === 'pink') {
-                        // Implement pink noise generation here
-                        data[i] = /* Pink noise generation */;
-                    } else if (type === 'brownian') {
-                        // Implement brownian noise generation here
-                        data[i] = /* Brownian noise generation */;
-                    }
+                    output[i] = Math.random() * 2 - 1;
                 }
 
-                noiseNode.buffer = buffer;
-                noiseNode.connect(context.destination);
-                noiseNode.start();
+                const whiteNoiseSource = context.createBufferSource();
+                whiteNoiseSource.buffer = noiseBuffer;
+                whiteNoiseSource.loop = true;
+                whiteNoiseSource.connect(context.destination);
+                whiteNoiseSource.start();
 
-                // Store a reference to the noise node to stop it later
-                const noiseNodes = {
-                    [type]: noiseNode,
-                };
-
-                return noiseNodes;
+                return whiteNoiseSource;
             }
 
-            // Event listeners for noise buttons
-            const noiseNodes = {}; // To store noise nodes
-
+            // Event listener for the "Play White Noise" button
             const whiteNoiseButton = document.getElementById('play-white-noise');
             whiteNoiseButton.addEventListener('click', () => {
-                stopNoise('white');
-                noiseNodes.white = generateNoise('white');
-            });
-
-            const pinkNoiseButton = document.getElementById('play-pink-noise');
-            pinkNoiseButton.addEventListener('click', () => {
-                stopNoise('pink');
-                noiseNodes.pink = generateNoise('pink');
-            });
-
-            const brownianNoiseButton = document.getElementById('play-brownian-noise');
-            brownianNoiseButton.addEventListener('click', () => {
-                stopNoise('brownian');
-                noiseNodes.brownian = generateNoise('brownian');
-            });
-
-            // Function to stop noise playback
-            function stopNoise(type) {
-                if (noiseNodes[type]) {
-                    noiseNodes[type].stop();
+                if (noiseNode) {
+                    noiseNode.stop();
                 }
-            }
+                noiseNode = generateWhiteNoise();
+            });
+
+            let noiseNode;
+
         } else {
             console.error("Audio is not supported in this browser.");
         }
