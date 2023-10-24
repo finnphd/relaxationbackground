@@ -21,75 +21,80 @@
             const audioObj = new Audio("./Responsive Hypnosis Example.mp3");
             const playButton = document.getElementById('play');
 
-            playButton.addEventListener('mousedown', startAudio);
-            playButton.addEventListener('mouseup', stopAudio);
-            playButton.addEventListener('touchstart', startAudio);
-            playButton.addEventListener('touchend', stopAudio);
-
-            // Add event listeners for the spacebar key
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Space' || event.keyCode === 32) {
-                    startAudio(event);
-                }
-            });
-
-            document.addEventListener('keyup', function (event) {
-                if (event.key === 'Space' || event.keyCode === 32) {
-                    stopAudio(event);
-                }
-            });
+            // ... (Existing code for audio playback)
 
             audioObj.addEventListener('error', function () {
                 console.error('Audio could not be loaded.');
             });
 
-            function startAudio(e) {
-                e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
-                audioObj.play();
-                playButton.style.margin = "10px";
+            // Function to generate background noise
+            function generateNoise(type) {
+                const context = new (window.AudioContext || window.webkitAudioContext)();
+
+                // Create a noise source node
+                const noiseNode = context.createBufferSource();
+                noiseNode.loop = true;
+
+                // Create a buffer to store the noise data
+                const bufferSize = context.sampleRate * 2;
+                const buffer = context.createBuffer(1, bufferSize, context.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                // Generate noise data based on the selected type
+                for (let i = 0; i < bufferSize; i++) {
+                    if (type === 'white') {
+                        data[i] = Math.random() * 2 - 1;
+                    } else if (type === 'pink') {
+                        // Implement pink noise generation here
+                        data[i] = /* Pink noise generation */;
+                    } else if (type === 'brownian') {
+                        // Implement brownian noise generation here
+                        data[i] = /* Brownian noise generation */;
+                    }
+                }
+
+                noiseNode.buffer = buffer;
+                noiseNode.connect(context.destination);
+                noiseNode.start();
+
+                // Store a reference to the noise node to stop it later
+                const noiseNodes = {
+                    [type]: noiseNode,
+                };
+
+                return noiseNodes;
             }
 
-            function stopAudio() {
-                audioObj.pause();
-                playButton.style.margin = "0";
+            // Event listeners for noise buttons
+            const noiseNodes = {}; // To store noise nodes
+
+            const whiteNoiseButton = document.getElementById('play-white-noise');
+            whiteNoiseButton.addEventListener('click', () => {
+                stopNoise('white');
+                noiseNodes.white = generateNoise('white');
+            });
+
+            const pinkNoiseButton = document.getElementById('play-pink-noise');
+            pinkNoiseButton.addEventListener('click', () => {
+                stopNoise('pink');
+                noiseNodes.pink = generateNoise('pink');
+            });
+
+            const brownianNoiseButton = document.getElementById('play-brownian-noise');
+            brownianNoiseButton.addEventListener('click', () => {
+                stopNoise('brownian');
+                noiseNodes.brownian = generateNoise('brownian');
+            });
+
+            // Function to stop noise playback
+            function stopNoise(type) {
+                if (noiseNodes[type]) {
+                    noiseNodes[type].stop();
+                }
             }
         } else {
             console.error("Audio is not supported in this browser.");
         }
-
-        // Function to generate background noise
-        function generateNoise(type) {
-            const noiseAudio = new Audio();
-
-            // Set the source of the noise audio based on the selected type
-            switch (type) {
-                case 'white':
-                    noiseAudio.src = 'white-noise.mp3';
-                    break;
-                case 'pink':
-                    noiseAudio.src = 'pink-noise.mp3';
-                    break;
-                case 'brownian':
-                    noiseAudio.src = 'brownian-noise.mp3';
-                    break;
-                default:
-                    console.error('Invalid noise type.');
-                    return;
-            }
-
-            noiseAudio.loop = true;
-            noiseAudio.play();
-        }
-
-        // Event listeners for noise buttons
-        const whiteNoiseButton = document.getElementById('play-white-noise');
-        whiteNoiseButton.addEventListener('click', () => generateNoise('white'));
-
-        const pinkNoiseButton = document.getElementById('play-pink-noise');
-        pinkNoiseButton.addEventListener('click', () => generateNoise('pink'));
-
-        const brownianNoiseButton = document.getElementById('play-brownian-noise');
-        brownianNoiseButton.addEventListener('click', () => generateNoise('brownian'));
     </script>
 </body>
 </html>
