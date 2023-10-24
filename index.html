@@ -1,66 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Audio Player with Background Noise</title>
 </head>
 <body>
-    <select id="backgroundAudioSelect">
-        <option value="background1.mp3">Background Audio 1</option>
-        <option value="background2.mp3">Background Audio 2</option>
-        <!-- Add more options for background audio files -->
-    </select>
-
     <svg id="play" viewBox="0 0 200 200" style="margin: auto; width: 90vw; height: 90vh">
         <circle cx="100" cy="100" r="100" />
         <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
     </svg>
 
+    <div id="noise-selector">
+        <button id="play-white-noise">Play White Noise</button>
+        <button id="play-pink-noise">Play Pink Noise</button>
+        <button id="play-brownian-noise">Play Brownian Noise</button>
+    </div>
+
     <script>
-        // Initialize background audio object
-        let backgroundAudio = new Audio();
-        let mainAudio = new Audio("./mainAudio.mp3"); // Replace with your main audio file
+        // Existing code for audio playback
+        if (typeof Audio !== "undefined") {
+            const audioObj = new Audio("./Responsive Hypnosis Example.mp3");
+            const playButton = document.getElementById('play');
 
-        // Function to set the background audio source
-        function setBackgroundAudio() {
-            const select = document.getElementById('backgroundAudioSelect');
-            backgroundAudio.src = select.value;
-            backgroundAudio.load();
-            backgroundAudio.loop = true; // Loop the background audio
-        }
+            playButton.addEventListener('mousedown', startAudio);
+            playButton.addEventListener('mouseup', stopAudio);
+            playButton.addEventListener('touchstart', startAudio);
+            playButton.addEventListener('touchend', stopAudio);
 
-        // Event listener for background audio selection
-        document.getElementById('backgroundAudioSelect').addEventListener('change', setBackgroundAudio);
+            // Add event listeners for the spacebar key
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Space' || event.keyCode === 32) {
+                    startAudio(event);
+                }
+            });
 
-        // Function to start main audio
-        function startAudio(e) {
-            e.preventDefault(); // Prevent the default behavior
-            mainAudio.play();
-        }
+            document.addEventListener('keyup', function (event) {
+                if (event.key === 'Space' || event.keyCode === 32) {
+                    stopAudio(event);
+                }
+            });
 
-        // Function to stop main audio
-        function stopAudio() {
-            mainAudio.pause();
-        }
+            audioObj.addEventListener('error', function () {
+                console.error('Audio could not be loaded.');
+            });
 
-        // Event listeners for user interactions
-        document.addEventListener('keydown', function (event) {
-            if (event.key === ' ' || event.key === 'Spacebar') {
-                startAudio(event);
+            function startAudio(e) {
+                e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
+                audioObj.play();
+                playButton.style.margin = "10px";
             }
-        });
 
-        document.addEventListener('keyup', function (event) {
-            if (event.key === ' ' || event.key === 'Spacebar') {
-                stopAudio(event);
+            function stopAudio() {
+                audioObj.pause();
+                playButton.style.margin = "0";
             }
-        });
+        } else {
+            console.error("Audio is not supported in this browser.");
+        }
 
-        document.getElementById('play').addEventListener('mousedown', startAudio);
-        document.getElementById('play').addEventListener('mouseup', stopAudio);
-        document.getElementById('play').addEventListener('touchstart', startAudio);
-        document.getElementById('play').addEventListener('touchend', stopAudio);
+        // Function to generate background noise
+        function generateNoise(type) {
+            const noiseAudio = new Audio();
 
-        // Initially set the background audio
-        setBackgroundAudio();
+            // Set the source of the noise audio based on the selected type
+            switch (type) {
+                case 'white':
+                    noiseAudio.src = 'white-noise.mp3';
+                    break;
+                case 'pink':
+                    noiseAudio.src = 'pink-noise.mp3';
+                    break;
+                case 'brownian':
+                    noiseAudio.src = 'brownian-noise.mp3';
+                    break;
+                default:
+                    console.error('Invalid noise type.');
+                    return;
+            }
+
+            noiseAudio.loop = true;
+            noiseAudio.play();
+        }
+
+        // Event listeners for noise buttons
+        const whiteNoiseButton = document.getElementById('play-white-noise');
+        whiteNoiseButton.addEventListener('click', () => generateNoise('white'));
+
+        const pinkNoiseButton = document.getElementById('play-pink-noise');
+        pinkNoiseButton.addEventListener('click', () => generateNoise('pink'));
+
+        const brownianNoiseButton = document.getElementById('play-brownian-noise');
+        brownianNoiseButton.addEventListener('click', () => generateNoise('brownian'));
     </script>
 </body>
 </html>
