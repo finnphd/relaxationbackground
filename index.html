@@ -3,44 +3,58 @@
     <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
 </svg>
 
+<audio id="foregroundAudio" src="Responsive Hypnosis Example.mp3"></audio>
 <audio id="backgroundAudio" src="background.mp3" loop></audio>
 
+<button id="backgroundPlayButton">Play Background Audio</button>
+
 <script>
-    let audioObj = new Audio("./Responsive Hypnosis Example.mp3");
-    let playButton = document.getElementById('play');
+    let foregroundAudio = document.getElementById('foregroundAudio');
     let backgroundAudio = document.getElementById('backgroundAudio');
+    let playButton = document.getElementById('play');
+    let backgroundPlayButton = document.getElementById('backgroundPlayButton');
 
     // Set the background audio volume (from 0 to 1)
     backgroundAudio.volume = 0.5;
 
-    playButton.addEventListener('mousedown', startAudio);
-    playButton.addEventListener('mouseup', stopAudio);
-    playButton.addEventListener('touchstart', startAudio);
-    playButton.addEventListener('touchend', stopAudio);
+    playButton.addEventListener('mousedown', startForegroundAudio);
+    playButton.addEventListener('mouseup', stopForegroundAudio);
+    playButton.addEventListener('touchstart', startForegroundAudio);
+    playButton.addEventListener('touchend', stopForegroundAudio);
 
     // Add event listeners for the spacebar key
     document.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
-            startAudio(event);
+            startForegroundAudio(event);
         }
     });
 
     document.addEventListener('keyup', function (event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
-            stopAudio(event);
+            stopForegroundAudio(event);
         }
     });
 
-    function startAudio(e) {
+    backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+
+    function startForegroundAudio(e) {
         e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
-        audioObj.play();
+        foregroundAudio.play();
         playButton.style.margin = "10px";
-        backgroundAudio.play();
     }
 
-    function stopAudio() {
-        audioObj.pause();
+    function stopForegroundAudio() {
+        foregroundAudio.pause();
         playButton.style.margin = "0";
-        backgroundAudio.pause();
+    }
+
+    function toggleBackgroundAudio() {
+        if (backgroundAudio.paused) {
+            backgroundAudio.play();
+            backgroundPlayButton.textContent = "Pause Background Audio";
+        } else {
+            backgroundAudio.pause();
+            backgroundPlayButton.textContent = "Play Background Audio";
+        }
     }
 </script>
