@@ -8,7 +8,7 @@
             font-family: 'Arial', sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             height: 100vh;
             background-color: #282c34;
@@ -16,13 +16,13 @@
         }
         svg {
             margin: auto;
-            width: 90vw;
-            height: 90vh;
+            width: 80vw;
+            height: 70vh;
             cursor: pointer;
             transition: transform 0.1s ease;
         }
         button {
-            margin-top: 20px;
+            margin: 5px 0;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -30,7 +30,7 @@
         #volumeControls {
             position: fixed;
             top: 50%;
-            right: -300px; /* Increased to ensure complete hiding */
+            right: -350px; /* Increase to ensure complete hiding */
             transform: translateY(-50%);
             background-color: #4CAF50;
             padding: 10px;
@@ -50,8 +50,10 @@
     <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
 </svg>
 
-<button id="backgroundPlayButton">Play Background Audio</button>
-<button id="toggleVolume">Volume Controls</button>
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <button id="backgroundPlayButton">Play Background Audio</button>
+    <button id="toggleVolume">Volume Controls</button>
+</div>
 
 <div id="volumeControls">
     Foreground Volume: <input class="volume-slider" type="range" id="foregroundVolume" min="0" max="1" step="0.01" value="0.5"><br>
@@ -61,46 +63,43 @@
 <script>
     let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
     let backgroundAudio = new Audio("background.mp3");
+    let playButton = document.getElementById('play');
+    let backgroundPlayButton = document.getElementById('backgroundPlayButton');
+    let volumeControls = document.getElementById('volumeControls');
+    let toggleVolumeButton = document.getElementById('toggleVolume');
+    let foregroundVolumeSlider = document.getElementById('foregroundVolume');
+    let backgroundVolumeSlider = document.getElementById('backgroundVolume');
 
-    // Volume Controls
-    let foregroundVolumeControl = document.getElementById('foregroundVolume');
-    let backgroundVolumeControl = document.getElementById('backgroundVolume');
-    
-    foregroundVolumeControl.addEventListener('input', function() {
+    // Set the initial volume
+    foregroundAudio.volume = foregroundVolumeSlider.value;
+    backgroundAudio.volume = backgroundVolumeSlider.value;
+
+    foregroundVolumeSlider.addEventListener('input', function() {
         foregroundAudio.volume = this.value;
     });
 
-    backgroundVolumeControl.addEventListener('input', function() {
+    backgroundVolumeSlider.addEventListener('input', function() {
         backgroundAudio.volume = this.value;
     });
 
-    // Volume controls toggle
-    document.getElementById('toggleVolume').addEventListener('click', function() {
-        let controls = document.getElementById('volumeControls');
-        if (controls.style.right === '0px') {
-            controls.style.right = '-300px';  // Ensuring complete hiding
+    toggleVolumeButton.addEventListener('click', function() {
+        if (volumeControls.style.right === "-350px") {
+            volumeControls.style.right = "0";
         } else {
-            controls.style.right = '0px';
+            volumeControls.style.right = "-350px";
         }
     });
-
-    // Audio Controls
-    let playButton = document.getElementById('play');
-    let backgroundPlayButton = document.getElementById('backgroundPlayButton');
-
-    backgroundAudio.volume = 0.5;
-    backgroundAudio.loop = true;
 
     playButton.addEventListener('mousedown', startForegroundAudio);
     playButton.addEventListener('mouseup', stopForegroundAudio);
     playButton.addEventListener('touchstart', startForegroundAudio);
     playButton.addEventListener('touchend', stopForegroundAudio);
-    playButton.addEventListener('keydown', function (event) {
+    playButton.addEventListener('keydown', function(event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
             startForegroundAudio(event);
         }
     });
-    playButton.addEventListener('keyup', function (event) {
+    playButton.addEventListener('keyup', function(event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
             stopForegroundAudio(event);
         }
@@ -109,9 +108,9 @@
     backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
 
     function startForegroundAudio(e) {
-        e.preventDefault();
+        e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
         foregroundAudio.play();
-        playButton.style.transform = "scale(0.98)";
+        playButton.style.transform = "scale(0.9)";
     }
 
     function stopForegroundAudio() {
