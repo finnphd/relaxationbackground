@@ -16,6 +16,7 @@
             height: 100vh;
             margin: 0;
             color: white;
+            position: relative;
         }
 
         #play {
@@ -42,6 +43,34 @@
             background-color: #444;
         }
 
+        /* Hidden buttons for triggering selection and volume adjustment */
+        .hidden-btn {
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            position: absolute;
+            bottom: 10px;
+            opacity: 0.2; /* make it slightly visible for demonstration */
+            cursor: pointer;
+            border: none;
+        }
+
+        #recording-btn {
+            left: 10px;
+        }
+
+        #volume-btn {
+            right: 10px;
+        }
+
+        /* Dropdowns and sliders for selection and volume adjustment */
+        .control-panel {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
     </style>
 </head>
 
@@ -54,55 +83,63 @@
 
     <button id="backgroundPlayButton">Play Background Audio</button>
 
+    <!-- Hidden buttons -->
+    <button class="hidden-btn" id="recording-btn"></button>
+    <button class="hidden-btn" id="volume-btn"></button>
+
+    <!-- Dropdowns for recording selection -->
+    <div id="selectionContainer" class="control-panel">
+        <label>Foreground:
+            <select id="foregroundSelect">
+                <option value="Responsive Hypnosis Example.mp3">Recording 1</option>
+                <option value="AnotherExample.mp3">Recording 2</option>
+                <!-- Add more recordings as options -->
+            </select>
+        </label>
+        <label>Background:
+            <select id="backgroundSelect">
+                <option value="background.mp3">Background 1</option>
+                <option value="AnotherBackground.mp3">Background 2</option>
+                <!-- Add more backgrounds as options -->
+            </select>
+        </label>
+    </div>
+
+    <!-- Sliders for volume adjustment -->
+    <div id="volumeContainer" class="control-panel">
+        <label>Foreground Volume:
+            <input type="range" id="foregroundVolume" min="0" max="1" step="0.01" value="0.5">
+        </label>
+        <label>Background Volume:
+            <input type="range" id="backgroundVolume" min="0" max="1" step="0.01" value="0.5">
+        </label>
+    </div>
+
     <script>
         let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
         let backgroundAudio = new Audio("background.mp3");
+
         let playButton = document.getElementById('play');
         let backgroundPlayButton = document.getElementById('backgroundPlayButton');
+        let recordingBtn = document.getElementById('recording-btn');
+        let volumeBtn = document.getElementById('volume-btn');
 
-        // Set the background audio volume (from 0 to 1)
-        backgroundAudio.volume = 0.5;
+        let selectionContainer = document.getElementById('selectionContainer');
+        let volumeContainer = document.getElementById('volumeContainer');
 
-        // Ensure the background audio loops infinitely
-        backgroundAudio.loop = true;
-
-        playButton.addEventListener('mousedown', startForegroundAudio);
-        playButton.addEventListener('mouseup', stopForegroundAudio);
-        playButton.addEventListener('touchstart', startForegroundAudio);
-        playButton.addEventListener('touchend', stopForegroundAudio);
-        playButton.addEventListener('keydown', function(event) {
-            if (event.key === ' ' || event.key === 'Spacebar') {
-                startForegroundAudio(event);
-            }
-        });
-        playButton.addEventListener('keyup', function(event) {
-            if (event.key === ' ' || event.key === 'Spacebar') {
-                stopForegroundAudio(event);
-            }
+        // Event listeners for hidden buttons
+        recordingBtn.addEventListener('click', () => {
+            selectionContainer.style.display = 'block';
+            volumeContainer.style.display = 'none';
         });
 
-        backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+        volumeBtn.addEventListener('click', () => {
+            volumeContainer.style.display = 'block';
+            selectionContainer.style.display = 'none';
+        });
 
-        function startForegroundAudio(e) {
-            e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
-            foregroundAudio.play();
-            playButton.style.margin = "10px 0";
-        }
+        // ... [Rest of your code remains the same] ...
 
-        function stopForegroundAudio() {
-            foregroundAudio.pause();
-            playButton.style.margin = "0";
-        }
-
-        function toggleBackgroundAudio() {
-            if (backgroundAudio.paused) {
-                backgroundAudio.play();
-                backgroundPlayButton.textContent = "Pause Background Audio";
-            } else {
-                backgroundAudio.pause();
-                backgroundPlayButton.textContent = "Play Background Audio";
-            }
-        }
     </script>
 </body>
 
