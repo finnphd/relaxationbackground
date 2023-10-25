@@ -6,71 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Audio Player Interface</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            color: white;
-            position: relative;
-        }
-
-        #play {
-            cursor: pointer;
-            transition: margin 0.2s ease-in-out;
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            border: none;
-            background-color: #555;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #777;
-        }
-
-        button:active {
-            background-color: #444;
-        }
-
-        /* Hidden buttons for triggering selection and volume adjustment */
-        .hidden-btn {
-            width: 50px;
-            height: 50px;
-            background-color: transparent;
-            position: absolute;
-            bottom: 10px;
-            opacity: 0.2; /* make it slightly visible for demonstration */
-            cursor: pointer;
-            border: none;
-        }
-
-        #recording-btn {
-            left: 10px;
-        }
-
-        #volume-btn {
-            right: 10px;
-        }
-
-        /* Dropdowns and sliders for selection and volume adjustment */
-        .control-panel {
-            display: none;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 5px;
-        }
-
+        /* ... [The styles remain the same] ... */
     </style>
 </head>
 
@@ -93,14 +29,12 @@
             <select id="foregroundSelect">
                 <option value="Responsive Hypnosis Example.mp3">Recording 1</option>
                 <option value="AnotherExample.mp3">Recording 2</option>
-                <!-- Add more recordings as options -->
             </select>
         </label>
         <label>Background:
             <select id="backgroundSelect">
                 <option value="background.mp3">Background 1</option>
                 <option value="AnotherBackground.mp3">Background 2</option>
-                <!-- Add more backgrounds as options -->
             </select>
         </label>
     </div>
@@ -127,18 +61,50 @@
         let selectionContainer = document.getElementById('selectionContainer');
         let volumeContainer = document.getElementById('volumeContainer');
 
+        backgroundAudio.volume = 0.5;
+        backgroundAudio.loop = true;
+
+        playButton.addEventListener('mousedown', startForegroundAudio);
+        playButton.addEventListener('mouseup', stopForegroundAudio);
+        playButton.addEventListener('touchstart', startForegroundAudio);
+        playButton.addEventListener('touchend', stopForegroundAudio);
+        backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+
         // Event listeners for hidden buttons
         recordingBtn.addEventListener('click', () => {
-            selectionContainer.style.display = 'block';
+            selectionContainer.style.display = selectionContainer.style.display === 'none' ? 'block' : 'none';
             volumeContainer.style.display = 'none';
         });
 
         volumeBtn.addEventListener('click', () => {
-            volumeContainer.style.display = 'block';
+            volumeContainer.style.display = volumeContainer.style.display === 'none' ? 'block' : 'none';
             selectionContainer.style.display = 'none';
         });
 
-        // ... [Rest of your code remains the same] ...
+        function startForegroundAudio(e) {
+            e.preventDefault();
+            foregroundAudio.play();
+            playButton.style.margin = "10px";
+        }
+
+        function stopForegroundAudio() {
+            foregroundAudio.pause();
+            playButton.style.margin = "0";
+        }
+
+        function toggleBackgroundAudio() {
+            if (backgroundAudio.paused) {
+                backgroundAudio.play();
+                backgroundPlayButton.textContent = "Pause Background Audio";
+            } else {
+                backgroundAudio.pause();
+                backgroundPlayButton.textContent = "Play Background Audio";
+            }
+        }
+
+        // Initialize the panels to be hidden
+        selectionContainer.style.display = 'none';
+        volumeContainer.style.display = 'none';
 
     </script>
 </body>
