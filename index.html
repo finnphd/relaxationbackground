@@ -10,18 +10,22 @@
         #play {
             margin: auto;
             width: 90vw;
-            height: 90vh;
+            max-width: 200px; /* Set a maximum width for the SVG */
+            height: 90vw;
+            max-height: 200px; /* Set a maximum height for the SVG */
         }
         #backgroundPlayButton {
             font-family: Arial, sans-serif;
-            font-size: 20px;
+            font-size: 18px; /* Reduce font size for mobile devices */
             background-color: #0074d9;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 10px; /* Reduce margin for mobile devices */
+            width: 90%; /* Make the button take up 90% of the screen width */
+            max-width: 200px; /* Set a maximum width for the button */
             transition: background-color 0.3s;
         }
         #backgroundPlayButton:hover {
