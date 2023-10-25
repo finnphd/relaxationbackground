@@ -54,15 +54,22 @@
     // Ensure the background audio loops infinitely
     backgroundAudio.loop = true;
 
-    playButton.addEventListener('mousedown', startForegroundAudio);
-    playButton.addEventListener('mouseup', stopForegroundAudio);
+    foregroundAudio.addEventListener('play', () => {
+        playButton.style.margin = "10px";
+    });
+
+    foregroundAudio.addEventListener('pause', () => {
+        playButton.style.margin = "0";
+    });
+
+    playButton.addEventListener('click', startForegroundAudio);
     playButton.addEventListener('touchstart', startForegroundAudio);
-    playButton.addEventListener('touchend', stopForegroundAudio);
     playButton.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
             startForegroundAudio(event);
         }
     });
+
     playButton.addEventListener('keyup', function (event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
             stopForegroundAudio(event);
@@ -73,13 +80,11 @@
 
     function startForegroundAudio(e) {
         e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
-        foregroundAudio.play();
-        playButton.style.margin = "10px";
-    }
-
-    function stopForegroundAudio() {
-        foregroundAudio.pause();
-        playButton.style.margin = "0";
+        if (foregroundAudio.paused) {
+            foregroundAudio.play();
+        } else {
+            foregroundAudio.pause();
+        }
     }
 
     function toggleBackgroundAudio() {
