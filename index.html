@@ -7,6 +7,7 @@
         body {
             font-family: 'Arial', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -25,6 +26,20 @@
             font-size: 16px;
             cursor: pointer;
         }
+        #volumeControls {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            background-color: #4CAF50;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+        .volume-slider {
+            width: 200px;
+            margin: 10px;
+        }
     </style>
 </head>
 <body>
@@ -35,16 +50,27 @@
 </svg>
 
 <button id="backgroundPlayButton">Play Background Audio</button>
+<button id="toggleVolume">Volume Controls</button>
+
+<div id="volumeControls">
+    Foreground Volume: <input class="volume-slider" type="range" id="foregroundVolume" min="0" max="1" step="0.01" value="0.5">
+    Background Volume: <input class="volume-slider" type="range" id="backgroundVolume" min="0" max="1" step="0.01" value="0.5">
+</div>
 
 <script>
     let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
     let backgroundAudio = new Audio("background.mp3");
     let playButton = document.getElementById('play');
     let backgroundPlayButton = document.getElementById('backgroundPlayButton');
+    let toggleVolumeButton = document.getElementById('toggleVolume');
+    let volumeControls = document.getElementById('volumeControls');
+    let foregroundVolumeSlider = document.getElementById('foregroundVolume');
+    let backgroundVolumeSlider = document.getElementById('backgroundVolume');
 
-    // Set the background audio volume (from 0 to 1)
-    backgroundAudio.volume = 0.5;
-    
+    // Set the initial audio volume (from 0 to 1)
+    backgroundAudio.volume = backgroundVolumeSlider.value;
+    foregroundAudio.volume = foregroundVolumeSlider.value;
+
     // Ensure the background audio loops infinitely
     backgroundAudio.loop = true;
 
@@ -52,20 +78,26 @@
     playButton.addEventListener('mouseup', stopForegroundAudio);
     playButton.addEventListener('touchstart', startForegroundAudio);
     playButton.addEventListener('touchend', stopForegroundAudio);
-
     document.addEventListener('keydown', function (event) {
         if (event.code === 'Space') {
             startForegroundAudio(event);
         }
     });
-
     document.addEventListener('keyup', function (event) {
         if (event.code === 'Space') {
             stopForegroundAudio(event);
         }
     });
-
     backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+    toggleVolumeButton.addEventListener('click', function() {
+        volumeControls.style.display = volumeControls.style.display === 'none' ? 'block' : 'none';
+    });
+    foregroundVolumeSlider.addEventListener('input', function() {
+        foregroundAudio.volume = this.value;
+    });
+    backgroundVolumeSlider.addEventListener('input', function() {
+        backgroundAudio.volume = this.value;
+    });
 
     function startForegroundAudio(e) {
         e.preventDefault();
