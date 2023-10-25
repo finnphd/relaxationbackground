@@ -52,13 +52,15 @@
     playButton.addEventListener('mouseup', stopForegroundAudio);
     playButton.addEventListener('touchstart', startForegroundAudio);
     playButton.addEventListener('touchend', stopForegroundAudio);
-    playButton.addEventListener('keydown', function (event) {
-        if (event.key === ' ' || event.key === 'Spacebar') {
+
+    document.addEventListener('keydown', function (event) {
+        if (event.code === 'Space') {
             startForegroundAudio(event);
         }
     });
-    playButton.addEventListener('keyup', function (event) {
-        if (event.key === ' ' || event.key === 'Spacebar') {
+
+    document.addEventListener('keyup', function (event) {
+        if (event.code === 'Space') {
             stopForegroundAudio(event);
         }
     });
