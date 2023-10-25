@@ -13,6 +13,7 @@
 <button id="backgroundPlayButton">Play Background Audio</button>
 
 <script>
+    let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
     let backgroundAudio = new Audio("background.mp3");
     let playButton = document.getElementById('play');
     let backgroundPlayButton = document.getElementById('backgroundPlayButton');
@@ -20,18 +21,32 @@
     // Set the background audio volume (from 0 to 1)
     backgroundAudio.volume = 0.5;
 
-    playButton.addEventListener('click', toggleForegroundAudio);
+    playButton.addEventListener('mousedown', startForegroundAudio);
+    playButton.addEventListener('mouseup', stopForegroundAudio);
+    playButton.addEventListener('touchstart', startForegroundAudio);
+    playButton.addEventListener('touchend', stopForegroundAudio);
+    playButton.addEventListener('keydown', function (event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            startForegroundAudio(event);
+        }
+    });
+    playButton.addEventListener('keyup', function (event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            stopForegroundAudio(event);
+        }
+    });
 
     backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
 
-    function toggleForegroundAudio() {
-        if (backgroundAudio.paused) {
-            backgroundAudio.play();
-            backgroundPlayButton.textContent = "Pause Background Audio";
-        } else {
-            backgroundAudio.pause();
-            backgroundPlayButton.textContent = "Play Background Audio";
-        }
+    function startForegroundAudio(e) {
+        e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
+        foregroundAudio.play();
+        playButton.style.margin = "10px";
+    }
+
+    function stopForegroundAudio() {
+        foregroundAudio.pause();
+        playButton.style.margin = "0";
     }
 
     function toggleBackgroundAudio() {
