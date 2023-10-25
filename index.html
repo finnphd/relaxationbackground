@@ -1,125 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Audio Player Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            background-color: #282c34;
         }
-
-        #play {
+        svg {
+            margin: auto;
+            width: 90vw;
+            height: 90vh;
             cursor: pointer;
-            transition: margin 0.2s ease;
+            transition: transform 0.1s ease;
         }
-
-        #backgroundPlayButton {
+        button {
             margin-top: 20px;
             padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #555;
-            color: white;
+            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        #backgroundPlayButton:hover {
-            background-color: #444;
-        }
-
-        .hidden-btn {
-            width: 20px;
-            height: 100vh;
-            background: transparent;
-            border: none;
-            position: absolute;
-            top: 0;
-            cursor: pointer;
-        }
-
-        #recording-btn {
-            left: 0;
-        }
-
-        #volume-btn {
-            right: 0;
-        }
-
-        .control-panel {
-            position: absolute;
-            top: 50%;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        #selectionContainer {
-            left: 0;
-            transform: translateY(-50%);
-        }
-
-        #volumeContainer {
-            right: 0;
-            transform: translateY(-50%);
-        }
-
-        select, input[type="range"] {
-            width: 150px;
-            margin: 5px 0;
         }
     </style>
 </head>
-
 <body>
 
-    <svg id="play" viewBox="0 0 200 200" style="width: 70vw; max-width: 400px;">
-        <circle cx="100" cy="100" r="90" fill="#555" />
-        <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
-    </svg>
+<svg id="play" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="100" fill="#4CAF50" />
+    <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
+</svg>
 
-    <button id="backgroundPlayButton">Play Background Audio</button>
+<button id="backgroundPlayButton">Play Background Audio</button>
 
-    <!-- Hidden buttons -->
-    <button class="hidden-btn" id="recording-btn"></button>
-    <button class="hidden-btn" id="volume-btn"></button>
+<script>
+    let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
+    let backgroundAudio = new Audio("background.mp3");
+    let playButton = document.getElementById('play');
+    let backgroundPlayButton = document.getElementById('backgroundPlayButton');
 
-    <!-- Dropdowns for recording selection -->
-    <div id="selectionContainer" class="control-panel">
-        <label>Foreground:
-            <select id="foregroundSelect">
-                <option value="Responsive Hypnosis Example.mp3">Recording 1</option>
-                <option value="AnotherExample.mp3">Recording 2</option>
-            </select>
-        </label>
-        <label>Background:
-            <select id="backgroundSelect">
-                <option value="background.mp3">Background 1</option>
-                <option value="AnotherBackground.mp3">Background 2</option>
-            </select>
-        </label>
-    </div>
+    // Set the background audio volume (from 0 to 1)
+    backgroundAudio.volume = 0.5;
+    
+    // Ensure the background audio loops infinitely
+    backgroundAudio.loop = true;
 
-    <!-- Sliders for volume adjustment -->
-    <div id="volumeContainer" class="control-panel">
-        <label>Foreground Volume:
-            <input type="range" id="foregroundVolume" min="0" max="1" step="0.01" value="0.5">
-        </label>
-        <label>Background Volume:
-            <input type="range" id="backgroundVolume" min="0" max="1" step="0.01" value="0.5">
-        </label>
-    </div>
+    playButton.addEventListener('mousedown', startForegroundAudio);
+    playButton.addEventListener('mouseup', stopForegroundAudio);
+    playButton.addEventListener('touchstart', startForegroundAudio);
+    playButton.addEventListener('touchend', stopForegroundAudio);
+    playButton.addEventListener('keydown', function (event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            startForegroundAudio(event);
+        }
+    });
+    playButton.addEventListener('keyup', function (event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            stopForegroundAudio(event);
+        }
+    });
 
-    <!-- The JavaScript part remains the same -->
+    backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
 
+    function startForegroundAudio(e) {
+        e.preventDefault();
+        foregroundAudio.play();
+        playButton.style.transform = "scale(0.95)";
+    }
+
+    function stopForegroundAudio() {
+        foregroundAudio.pause();
+        playButton.style.transform = "scale(1)";
+    }
+
+    function toggleBackgroundAudio() {
+        if (backgroundAudio.paused) {
+            backgroundAudio.play();
+            backgroundPlayButton.textContent = "Pause Background Audio";
+        } else {
+            backgroundAudio.pause();
+            backgroundPlayButton.textContent = "Play Background Audio";
+        }
+    }
+</script>
 </body>
-
 </html>
