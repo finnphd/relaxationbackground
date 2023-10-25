@@ -2,10 +2,36 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #play {
+            margin: auto;
+            width: 90vw;
+            height: 90vh;
+        }
+        #backgroundPlayButton {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            background-color: #0074d9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        #backgroundPlayButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
-<svg id="play" viewBox="0 0 200 200" style="margin: auto; width: 90vw; height: 90vh">
+<svg id="play" viewBox="0 0 200 200">
     <circle cx="100" cy="100" r="100" />
     <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
 </svg>
