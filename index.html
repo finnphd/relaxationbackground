@@ -2,40 +2,10 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        #play {
-            margin: auto;
-            width: 90vw;
-            max-width: 200px; /* Set a maximum width for the SVG */
-            height: 90vw;
-            max-height: 200px; /* Set a maximum height for the SVG */
-        }
-        #backgroundPlayButton {
-            font-family: Arial, sans-serif;
-            font-size: 18px; /* Reduce font size for mobile devices */
-            background-color: #0074d9;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px; /* Reduce margin for mobile devices */
-            width: 90%; /* Make the button take up 90% of the screen width */
-            max-width: 200px; /* Set a maximum width for the button */
-            transition: background-color 0.3s;
-        }
-        #backgroundPlayButton:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
 
-<svg id="play" viewBox="0 0 200 200">
+<svg id="play" viewBox="0 0 200 200" style="margin: auto; width: 90vw; height: 90vh">
     <circle cx="100" cy="100" r="100" />
     <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
 </svg>
@@ -54,22 +24,15 @@
     // Ensure the background audio loops infinitely
     backgroundAudio.loop = true;
 
-    foregroundAudio.addEventListener('play', () => {
-        playButton.style.margin = "10px";
-    });
-
-    foregroundAudio.addEventListener('pause', () => {
-        playButton.style.margin = "0";
-    });
-
-    playButton.addEventListener('click', startForegroundAudio);
+    playButton.addEventListener('mousedown', startForegroundAudio);
+    playButton.addEventListener('mouseup', stopForegroundAudio);
     playButton.addEventListener('touchstart', startForegroundAudio);
+    playButton.addEventListener('touchend', stopForegroundAudio);
     playButton.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
             startForegroundAudio(event);
         }
     });
-
     playButton.addEventListener('keyup', function (event) {
         if (event.key === ' ' || event.key === 'Spacebar') {
             stopForegroundAudio(event);
@@ -80,11 +43,13 @@
 
     function startForegroundAudio(e) {
         e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
-        if (foregroundAudio.paused) {
-            foregroundAudio.play();
-        } else {
-            foregroundAudio.pause();
-        }
+        foregroundAudio.play();
+        playButton.style.margin = "10px";
+    }
+
+    function stopForegroundAudio() {
+        foregroundAudio.pause();
+        playButton.style.margin = "0";
     }
 
     function toggleBackgroundAudio() {
