@@ -20,6 +20,9 @@
 
     // Set the background audio volume (from 0 to 1)
     backgroundAudio.volume = 0.5;
+    
+    // Ensure the background audio loops infinitely
+    backgroundAudio.loop = true;
 
     playButton.addEventListener('mousedown', startForegroundAudio);
     playButton.addEventListener('mouseup', stopForegroundAudio);
