@@ -6,7 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Audio Player Interface</title>
     <style>
-        /* ... [The styles remain the same] ... */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        #play {
+            cursor: pointer;
+            transition: margin 0.2s ease;
+        }
+
+        #backgroundPlayButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #555;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #backgroundPlayButton:hover {
+            background-color: #444;
+        }
+
+        .hidden-btn {
+            width: 20px;
+            height: 100vh;
+            background: transparent;
+            border: none;
+            position: absolute;
+            top: 0;
+            cursor: pointer;
+        }
+
+        #recording-btn {
+            left: 0;
+        }
+
+        #volume-btn {
+            right: 0;
+        }
+
+        .control-panel {
+            position: absolute;
+            top: 50%;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        #selectionContainer {
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        #volumeContainer {
+            right: 0;
+            transform: translateY(-50%);
+        }
+
+        select, input[type="range"] {
+            width: 150px;
+            margin: 5px 0;
+        }
     </style>
 </head>
 
@@ -49,64 +118,8 @@
         </label>
     </div>
 
-    <script>
-        let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
-        let backgroundAudio = new Audio("background.mp3");
+    <!-- The JavaScript part remains the same -->
 
-        let playButton = document.getElementById('play');
-        let backgroundPlayButton = document.getElementById('backgroundPlayButton');
-        let recordingBtn = document.getElementById('recording-btn');
-        let volumeBtn = document.getElementById('volume-btn');
-
-        let selectionContainer = document.getElementById('selectionContainer');
-        let volumeContainer = document.getElementById('volumeContainer');
-
-        backgroundAudio.volume = 0.5;
-        backgroundAudio.loop = true;
-
-        playButton.addEventListener('mousedown', startForegroundAudio);
-        playButton.addEventListener('mouseup', stopForegroundAudio);
-        playButton.addEventListener('touchstart', startForegroundAudio);
-        playButton.addEventListener('touchend', stopForegroundAudio);
-        backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
-
-        // Event listeners for hidden buttons
-        recordingBtn.addEventListener('click', () => {
-            selectionContainer.style.display = selectionContainer.style.display === 'none' ? 'block' : 'none';
-            volumeContainer.style.display = 'none';
-        });
-
-        volumeBtn.addEventListener('click', () => {
-            volumeContainer.style.display = volumeContainer.style.display === 'none' ? 'block' : 'none';
-            selectionContainer.style.display = 'none';
-        });
-
-        function startForegroundAudio(e) {
-            e.preventDefault();
-            foregroundAudio.play();
-            playButton.style.margin = "10px";
-        }
-
-        function stopForegroundAudio() {
-            foregroundAudio.pause();
-            playButton.style.margin = "0";
-        }
-
-        function toggleBackgroundAudio() {
-            if (backgroundAudio.paused) {
-                backgroundAudio.play();
-                backgroundPlayButton.textContent = "Pause Background Audio";
-            } else {
-                backgroundAudio.pause();
-                backgroundPlayButton.textContent = "Play Background Audio";
-            }
-        }
-
-        // Initialize the panels to be hidden
-        selectionContainer.style.display = 'none';
-        volumeContainer.style.display = 'none';
-
-    </script>
 </body>
 
 </html>
