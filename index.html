@@ -12,12 +12,13 @@
             align-items: center;
             height: 100vh;
             background-color: #282c34;
-            overflow: hidden; /* Prevents scrolling */
+            margin: 0;
+            overflow: hidden;
         }
         svg {
-            margin: auto;
-            width: 80vw;
-            height: 70vh;
+            margin: 5vh 0;
+            width: 60vw;
+            height: 50vh;
             cursor: pointer;
             transition: transform 0.1s ease;
         }
@@ -27,27 +28,27 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            padding: 10px 0;
+            padding: 3vh 0;
         }
         button {
-            margin: 5px 0;
-            padding: 10px 20px;
-            font-size: 16px;
+            margin: 1vh 0;
+            padding: 1vh 4vw;
+            font-size: 2vh;
             cursor: pointer;
         }
         #volumeControls {
             position: fixed;
             top: 50%;
-            right: -350px; /* Increase to ensure complete hiding */
+            right: -25vw;
             transform: translateY(-50%);
             background-color: #4CAF50;
-            padding: 10px;
+            padding: 2vh;
             border-radius: 10px 0 0 10px;
             transition: right 0.3s ease;
         }
         .volume-slider {
-            width: 200px;
-            margin: 10px;
+            width: 20vw;
+            margin: 1vh 0;
         }
     </style>
 </head>
@@ -91,10 +92,10 @@
     });
 
     toggleVolumeButton.addEventListener('click', function() {
-        if (volumeControls.style.right === "-350px") {
+        if (volumeControls.style.right === "-25vw") {
             volumeControls.style.right = "0";
         } else {
-            volumeControls.style.right = "-350px";
+            volumeControls.style.right = "-25vw";
         }
     });
 
@@ -116,7 +117,7 @@
     backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
 
     function startForegroundAudio(e) {
-        e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
+        e.preventDefault();
         foregroundAudio.play();
         playButton.style.transform = "scale(0.9)";
     }
