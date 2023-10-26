@@ -1,32 +1,38 @@
-// Define audio variables and elements
-const mainAudio = new Audio('Responsive Hypnosis Example.mp3');
-const buttons = {
-    playPause: document.querySelector('.play-pause'),
-    prev: document.querySelector('.prev'),
-    next: document.querySelector('.next'),
-    volume: document.querySelector('.volume')
-};
+const mainAudio = new Audio('path_to_audio_file.mp3');
+const playPauseBtn = document.querySelector('.play-pause');
 
-// Play/pause logic
-buttons.playPause.addEventListener('click', () => {
-    if (mainAudio.paused) {
-        mainAudio.play();
-    } else {
-        mainAudio.pause();
+// Play on mousedown or touchstart
+function playAudio() {
+    mainAudio.play();
+}
+
+// Pause on mouseup, touchend, or keyup (spacebar)
+function pauseAudio() {
+    mainAudio.pause();
+}
+
+playPauseBtn.addEventListener('mousedown', playAudio);
+playPauseBtn.addEventListener('mouseup', pauseAudio);
+playPauseBtn.addEventListener('touchstart', playAudio);
+playPauseBtn.addEventListener('touchend', pauseAudio);
+
+document.addEventListener('keydown', function(event) {
+    if (event.code === 'Space') {
+        playAudio();
     }
 });
 
-// Placeholder logic for other buttons (modify as needed)
-buttons.prev.addEventListener('click', () => {
-    console.log("Previous button clicked");
+document.addEventListener('keyup', function(event) {
+    if (event.code === 'Space') {
+        pauseAudio();
+    }
 });
 
-buttons.next.addEventListener('click', () => {
-    console.log("Next button clicked");
-});
-
-buttons.volume.addEventListener('click', () => {
-    console.log("Volume button clicked");
+// Prevent default behavior of spacebar (page scrolling)
+document.addEventListener('keydown', function(event) {
+    if (event.code === 'Space') {
+        event.preventDefault();
+    }
 });
 
 // Error handling for audio events
