@@ -1,42 +1,33 @@
-const mainAudio = new Audio('Responsive Hypnosis Example.mp3');
-const playPauseBtn = document.querySelector('.play-pause');
+let mainAudio = document.getElementById("mainAudio");
+let backgroundAudio = document.getElementById("backgroundAudio");
+let isBackgroundPlaying = false;
 
-// Play on mousedown or touchstart
-function playAudio() {
+function playMain() {
     mainAudio.play();
 }
 
-// Pause on mouseup, touchend, or keyup (spacebar)
-function pauseAudio() {
+function stopMain() {
     mainAudio.pause();
+    mainAudio.currentTime = 0;
 }
 
-playPauseBtn.addEventListener('mousedown', playAudio);
-playPauseBtn.addEventListener('mouseup', pauseAudio);
-playPauseBtn.addEventListener('touchstart', playAudio);
-playPauseBtn.addEventListener('touchend', pauseAudio);
+function toggleBackground() {
+    if (isBackgroundPlaying) {
+        backgroundAudio.pause();
+    } else {
+        backgroundAudio.play();
+    }
+    isBackgroundPlaying = !isBackgroundPlaying;
+}
 
-document.addEventListener('keydown', function(event) {
-    if (event.code === 'Space') {
-        playAudio();
+document.body.addEventListener("keydown", function (event) {
+    if (event.code === "Space") {
+        playMain();
     }
 });
 
-document.addEventListener('keyup', function(event) {
-    if (event.code === 'Space') {
-        pauseAudio();
+document.body.addEventListener("keyup", function (event) {
+    if (event.code === "Space") {
+        stopMain();
     }
 });
-
-// Prevent default behavior of spacebar (page scrolling)
-document.addEventListener('keydown', function(event) {
-    if (event.code === 'Space') {
-        event.preventDefault();
-    }
-});
-
-// Error handling for audio events
-mainAudio.onerror = function() {
-    console.error("Error loading the audio file.");
-    // Additional user feedback or handling can go here
-};
