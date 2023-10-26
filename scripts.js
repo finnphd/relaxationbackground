@@ -21,6 +21,15 @@ document.addEventListener('DOMContentLoaded', function() {
         isBackgroundPlaying = !isBackgroundPlaying;
     }
 
+    // Main audio event listeners
+    mainAudio.addEventListener("mousedown", playMain);
+    mainAudio.addEventListener("mouseup", stopMain);
+    mainAudio.addEventListener("touchstart", playMain);
+    mainAudio.addEventListener("touchend", stopMain);
+
+    // Background audio toggle button event listener
+    backgroundAudio.addEventListener("click", toggleBackground);
+
     document.body.addEventListener("keydown", function (event) {
         if (event.code === "Space") {
             playMain();
