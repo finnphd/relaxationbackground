@@ -15,6 +15,7 @@
             align-items: center;
             height: 100vh;
             background-color: #282c34;
+            touch-action: manipulation; /* Prevents zoom on triple click */
         }
 
         svg {
@@ -38,21 +39,13 @@
             background-color: #FFFFFF;
             border: none;
             border-radius: 50%;
-            width: 10vw; /* Increased from 5vw for larger initial size */
-            height: 10vw; 
-            max-width: 100px; 
-            max-height: 100px; 
+            width: 8vw;
+            height: 8vw;
+            max-width: 60px;
+            max-height: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        /* Media query to set a limit for larger screens */
-        @media (min-width: 768px) {
-            button {
-                width: 60px;
-                height: 60px;
-            }
         }
 
         #volumeControls {
@@ -69,9 +62,9 @@
     </svg>
 
     <div class="buttonContainer">
-        <button>□</button>
-        <button>▶</button>
-        <button>🔊</button>
+        <button id="pauseButton">□</button>
+        <button id="playBackground">▶</button>
+        <button id="toggleVolumeControls">🔊</button>
     </div>
 
     <div id="volumeControls">
@@ -83,6 +76,10 @@
         let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
         let backgroundAudio = new Audio("background.mp3");
         let playButton = document.getElementById('play');
+        let pauseButton = document.getElementById('pauseButton');
+        let playBackgroundButton = document.getElementById('playBackground');
+        let volumeControls = document.getElementById('volumeControls');
+        let toggleVolumeControls = document.getElementById('toggleVolumeControls');
 
         foregroundAudio.volume = 0.5;
         backgroundAudio.volume = 0.5;
@@ -100,6 +97,19 @@
             if (event.key === ' ' || event.key === 'Spacebar') {
                 stopForegroundAudio(event);
             }
+        });
+
+        pauseButton.addEventListener('click', function() {
+            foregroundAudio.pause();
+            backgroundAudio.pause();
+        });
+
+        playBackgroundButton.addEventListener('click', function() {
+            backgroundAudio.play();
+        });
+
+        toggleVolumeControls.addEventListener('click', function() {
+            volumeControls.style.display = (volumeControls.style.display === "none" ? "block" : "none");
         });
 
         function startForegroundAudio(e) {
