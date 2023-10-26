@@ -1,4 +1,4 @@
-const mainAudio = new Audio('path_to_audio_file.mp3');
+const mainAudio = new Audio('Responsive Hypnosis Example.mp3');
 const playPauseBtn = document.querySelector('.play-pause');
 
 // Play on mousedown or touchstart
