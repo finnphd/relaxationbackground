@@ -1,57 +1,60 @@
-document.addEventListener('DOMContentLoaded', function() {
-    let mainAudio = document.getElementById("mainAudio");
-    let backgroundAudio = document.getElementById("backgroundAudio");
-    let toggleButton = document.getElementById("backgroundToggleButton");
-    let isBackgroundPlaying = false;
+// Create audio context
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioContext = new AudioContext();
 
-    function playMain() {
-        console.log("Play Main Audio");
-        mainAudio.play();
-    }
+// Create AudioBufferSourceNode for both audios
+var sourceNodeMain = null;
+var sourceNodeBackground = null;
 
-    function stopMain() {
-        console.log("Stop Main Audio");
-        mainAudio.pause();
-        mainAudio.currentTime = 0;
-    }
+// Load audio files into buffers
+function loadAudio(url, callback) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+    request.onload = function() {
+        audioContext.decodeAudioData(request.response, function(buffer) {
+            callback(buffer);
+        });
+    };
+    request.send();
+}
 
-    function toggleBackground() {
-        console.log("Toggle Background Audio");
-        if (isBackgroundPlaying) {
-            backgroundAudio.pause();
-        } else {
-            backgroundAudio.play();
-        }
-        isBackgroundPlaying = !isBackgroundPlaying;
-    }
+var mainBuffer = null;
+loadAudio('Responsive Hypnosis Example.mp3', function(buffer) {
+    mainBuffer = buffer;
+});
 
-    // Main circle (play/stop main audio)
-    let mainCircle = document.getElementById("mainCircle");
-    if(mainCircle) {
-        mainCircle.addEventListener("mousedown", playMain);
-        mainCircle.addEventListener("mouseup", stopMain);
-        mainCircle.addEventListener("touchstart", playMain);
-        mainCircle.addEventListener("touchend", stopMain);
+var backgroundBuffer = null;
+loadAudio('background.mp3', function(buffer) {
+    backgroundBuffer = buffer;
+});
+
+// Play function
+function playAudio(buffer, loop = false) {
+    var source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.loop = loop;
+    source.connect(audioContext.destination);
+    source.start(0);
+    return source;
+}
+
+document.getElementById("mainCircle").addEventListener("click", function() {
+    // Play main audio on click
+    if (sourceNodeMain) {
+        sourceNodeMain.stop();
+        sourceNodeMain = null;
     } else {
-        console.error("Main Circle element not found");
+        sourceNodeMain = playAudio(mainBuffer);
     }
+});
 
-    // Background audio toggle button event listener
-    if(toggleButton) {
-        toggleButton.addEventListener("click", toggleBackground);
+document.getElementById("bottomMiddleButton").addEventListener("click", function() {
+    // Play or pause background audio
+    if (sourceNodeBackground) {
+        sourceNodeBackground.stop();
+        sourceNodeBackground = null;
     } else {
-        console.error("Toggle Button element not found");
+        sourceNodeBackground = playAudio(backgroundBuffer, true);
     }
-
-    document.body.addEventListener("keydown", function (event) {
-        if (event.code === "Space") {
-            playMain();
-        }
-    });
-
-    document.body.addEventListener("keyup", function (event) {
-        if (event.code === "Space") {
-            stopMain();
-        }
-    });
 });
