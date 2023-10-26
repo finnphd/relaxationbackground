@@ -1,5 +1,5 @@
 // Define audio variables and elements
-const mainAudio = new Audio('path_to_audio_file.mp3');
+const mainAudio = new Audio('Responsive Hypnosis Example.mp3');
 const buttons = {
     playPause: document.querySelector('.play-pause'),
     prev: document.querySelector('.prev'),
