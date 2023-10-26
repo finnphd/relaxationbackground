@@ -5,15 +5,18 @@ document.addEventListener('DOMContentLoaded', function() {
     let isBackgroundPlaying = false;
 
     function playMain() {
+        console.log("Play Main Audio");
         mainAudio.play();
     }
 
     function stopMain() {
+        console.log("Stop Main Audio");
         mainAudio.pause();
         mainAudio.currentTime = 0;
     }
 
     function toggleBackground() {
+        console.log("Toggle Background Audio");
         if (isBackgroundPlaying) {
             backgroundAudio.pause();
         } else {
@@ -23,13 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Main circle (play/stop main audio)
-    document.getElementById("mainCircle").addEventListener("mousedown", playMain);
-    document.getElementById("mainCircle").addEventListener("mouseup", stopMain);
-    document.getElementById("mainCircle").addEventListener("touchstart", playMain);
-    document.getElementById("mainCircle").addEventListener("touchend", stopMain);
+    let mainCircle = document.getElementById("mainCircle");
+    if(mainCircle) {
+        mainCircle.addEventListener("mousedown", playMain);
+        mainCircle.addEventListener("mouseup", stopMain);
+        mainCircle.addEventListener("touchstart", playMain);
+        mainCircle.addEventListener("touchend", stopMain);
+    } else {
+        console.error("Main Circle element not found");
+    }
 
     // Background audio toggle button event listener
-    toggleButton.addEventListener("click", toggleBackground);
+    if(toggleButton) {
+        toggleButton.addEventListener("click", toggleBackground);
+    } else {
+        console.error("Toggle Button element not found");
+    }
 
     document.body.addEventListener("keydown", function (event) {
         if (event.code === "Space") {
