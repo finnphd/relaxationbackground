@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     let mainAudio = document.getElementById("mainAudio");
     let backgroundAudio = document.getElementById("backgroundAudio");
+    let toggleButton = document.getElementById("backgroundToggleButton");
     let isBackgroundPlaying = false;
 
     function playMain() {
@@ -21,14 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
         isBackgroundPlaying = !isBackgroundPlaying;
     }
 
-    // Main audio event listeners
-    mainAudio.addEventListener("mousedown", playMain);
-    mainAudio.addEventListener("mouseup", stopMain);
-    mainAudio.addEventListener("touchstart", playMain);
-    mainAudio.addEventListener("touchend", stopMain);
+    // Main circle (play/stop main audio)
+    document.getElementById("mainCircle").addEventListener("mousedown", playMain);
+    document.getElementById("mainCircle").addEventListener("mouseup", stopMain);
+    document.getElementById("mainCircle").addEventListener("touchstart", playMain);
+    document.getElementById("mainCircle").addEventListener("touchend", stopMain);
 
     // Background audio toggle button event listener
-    backgroundAudio.addEventListener("click", toggleBackground);
+    toggleButton.addEventListener("click", toggleBackground);
 
     document.body.addEventListener("keydown", function (event) {
         if (event.code === "Space") {
