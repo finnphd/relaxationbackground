@@ -1,68 +1,45 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+body, html {
+    height: 100%;
     margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.audio-control, .secondary-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.play-pause {
-    width: 150px;
-    height: 150px;
+    font-family: Arial, sans-serif;
     background-color: #fff;
-    border: 1px solid #ddd;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.circle {
     border-radius: 50%;
-    cursor: pointer;
     margin: 10px;
-    background-image: url('path_to_play_icon.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.prev, .next, .volume {
-    width: 50px;
-    height: 50px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 50%;
     cursor: pointer;
-    margin: 10px;
 }
 
-/* Media Queries for Responsiveness */
-@media only screen and (max-width: 600px) {
-    .play-pause {
-        width: 120px;
-        height: 120px;
-    }
-
-    .prev, .next, .volume {
-        width: 40px;
-        height: 40px;
-    }
+.main-circle {
+    width: 60vmin;
+    height: 60vmin;
+    background-color: #ddd;
 }
 
-@media only screen and (min-width: 601px) and (max-width: 1024px) {
-    .play-pause {
-        width: 130px;
-        height: 130px;
-    }
-
-    .prev, .next, .volume {
-        width: 45px;
-        height: 45px;
-    }
+.controls {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
 }
 
-@media only screen and (min-width: 1025px) {
-    /* Adjust sizes or other styles for larger screens if necessary */
+.controls .circle {
+    width: 20vmin;
+    height: 20vmin;
+    background-color: #bbb;
+}
+
+@media screen and (max-width: 600px) {
+    .controls .circle {
+        width: 15vmin;
+        height: 15vmin;
+    }
 }
