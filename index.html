@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive Hypnosis</title>
-    <link rel="icon" href="logo.svg" type="image/svg+xml">
+    <link rel="icon" href="logo.svg">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -15,139 +14,140 @@
             align-items: center;
             height: 100vh;
             background-color: #282c34;
-            overflow: hidden;
+            overflow: hidden; /* Prevents scrolling */
         }
-
         svg {
             margin: auto;
             width: 80vw;
-            max-width: 300px; /* limit the maximum size of the SVG */
-            height: auto;
+            height: 70vh;
             cursor: pointer;
             transition: transform 0.1s ease;
+            border-radius: 50%;
+            border: 10px solid white;
         }
-
         .buttonContainer {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: center;
             align-items: center;
             width: 100%;
-            padding: 1rem 0;
+            padding: 10px 0;
         }
-
         button {
-            margin: 0.5rem 0;
-            padding: 1rem 2rem;
-            font-size: 1rem;
+            margin: 5px 20px;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
+            background-color: #FFFFFF;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-
         #volumeControls {
             position: fixed;
             top: 50%;
-            right: -22rem;
+            right: -350px; /* Increase to ensure complete hiding */
             transform: translateY(-50%);
             background-color: #4CAF50;
-            padding: 1rem;
-            border-radius: 1rem 0 0 1rem;
+            padding: 10px;
+            border-radius: 10px 0 0 10px;
             transition: right 0.3s ease;
         }
-
         .volume-slider {
-            width: 20rem;
-            margin: 1rem;
+            width: 200px;
+            margin: 10px;
         }
     </style>
 </head>
-
 <body>
-    <svg id="play" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="100" fill="#4CAF50" />
-        <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
-    </svg>
 
-    <div class="buttonContainer">
-        <button id="backgroundPlayButton">Play Background Audio</button>
-        <button id="toggleVolume">Volume Controls</button>
-    </div>
+<svg id="play" viewBox="0 0 200 200" tabindex="0"> <!-- Note: Added tabindex=0 to make SVG focusable -->
+    <circle cx="100" cy="100" r="100" fill="#4CAF50" />
+    <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
+</svg>
 
-    <div id="volumeControls">
-        Foreground Volume: <input class="volume-slider" type="range" id="foregroundVolume" min="0" max="1" step="0.01" value="0.5"><br>
-        Background Volume: <input class="volume-slider" type="range" id="backgroundVolume" min="0" max="1" step="0.01" value="0.5">
-    </div>
+<div class="buttonContainer">
+    <button id="backgroundPlayButton">□</button>
+    <button id="toggleVolume">▶</button>
+    <button>🔊</button> <!-- Placeholder icon for the third button -->
+</div>
 
-    <script>
-        const playButton = document.getElementById('play');
-        const backgroundPlayButton = document.getElementById('backgroundPlayButton');
-        const volumeControls = document.getElementById('volumeControls');
-        const toggleVolumeButton = document.getElementById('toggleVolume');
-        const foregroundVolumeSlider = document.getElementById('foregroundVolume');
-        const backgroundVolumeSlider = document.getElementById('backgroundVolume');
+<div id="volumeControls">
+    Foreground Volume: <input class="volume-slider" type="range" id="foregroundVolume" min="0" max="1" step="0.01" value="0.5"><br>
+    Background Volume: <input class="volume-slider" type="range" id="backgroundVolume" min="0" max="1" step="0.01" value="0.5">
+</div>
 
-        let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
-        let backgroundAudio = new Audio("background.mp3");
+<script>
+    let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
+    let backgroundAudio = new Audio("background.mp3");
+    let playButton = document.getElementById('play');
+    let backgroundPlayButton = document.getElementById('backgroundPlayButton');
+    let volumeControls = document.getElementById('volumeControls');
+    let toggleVolumeButton = document.getElementById('toggleVolume');
+    let foregroundVolumeSlider = document.getElementById('foregroundVolume');
+    let backgroundVolumeSlider = document.getElementById('backgroundVolume');
 
-        // Set the initial volume
-        foregroundAudio.volume = foregroundVolumeSlider.value;
-        backgroundAudio.volume = backgroundVolumeSlider.value;
+    // Set the initial volume
+    foregroundAudio.volume = foregroundVolumeSlider.value;
+    backgroundAudio.volume = backgroundVolumeSlider.value;
 
-        // Event Listeners
-        foregroundVolumeSlider.addEventListener('input', updateForegroundVolume);
-        backgroundVolumeSlider.addEventListener('input', updateBackgroundVolume);
-        toggleVolumeButton.addEventListener('click', toggleVolumePanel);
-        playButton.addEventListener('mousedown', startForegroundAudio);
-        playButton.addEventListener('mouseup', stopForegroundAudio);
-        playButton.addEventListener('touchstart', startForegroundAudio);
-        playButton.addEventListener('touchend', stopForegroundAudio);
-        playButton.addEventListener('keydown', handlePlayButtonKeyDown);
-        playButton.addEventListener('keyup', handlePlayButtonKeyUp);
-        backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+    foregroundVolumeSlider.addEventListener('input', function() {
+        foregroundAudio.volume = this.value;
+    });
 
-        function updateForegroundVolume() {
-            foregroundAudio.volume = foregroundVolumeSlider.value;
+    backgroundVolumeSlider.addEventListener('input', function() {
+        backgroundAudio.volume = this.value;
+    });
+
+    toggleVolumeButton.addEventListener('click', function() {
+        if (volumeControls.style.right === "-350px") {
+            volumeControls.style.right = "0";
+        } else {
+            volumeControls.style.right = "-350px";
         }
+    });
 
-        function updateBackgroundVolume() {
-            backgroundAudio.volume = backgroundVolumeSlider.value;
+    playButton.addEventListener('mousedown', startForegroundAudio);
+    playButton.addEventListener('mouseup', stopForegroundAudio);
+    playButton.addEventListener('touchstart', startForegroundAudio);
+    playButton.addEventListener('touchend', stopForegroundAudio);
+    playButton.addEventListener('keydown', function(event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            startForegroundAudio(event);
         }
+    });
+    playButton.addEventListener('keyup', function(event) {
+        if (event.key === ' ' || event.key === 'Spacebar') {
+            stopForegroundAudio(event);
+        }
+    });
 
-        function toggleVolumePanel() {
-            volumeControls.style.right = (volumeControls.style.right === "-22rem") ? "0" : "-22rem";
-        }
+    backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
 
-        function startForegroundAudio(e) {
-            e.preventDefault();
-            foregroundAudio.play();
-            playButton.style.transform = "scale(0.9)";
-        }
+    function startForegroundAudio(e) {
+        e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
+        foregroundAudio.play();
+        playButton.style.transform = "scale(0.9)";
+    }
 
-        function stopForegroundAudio() {
-            foregroundAudio.pause();
-            playButton.style.transform = "scale(1)";
-        }
+    function stopForegroundAudio() {
+        foregroundAudio.pause();
+        playButton.style.transform = "scale(1)";
+    }
 
-        function handlePlayButtonKeyDown(event) {
-            if (event.key === ' ' || event.key === 'Spacebar') {
-                startForegroundAudio(event);
-            }
+    function toggleBackgroundAudio() {
+        if (backgroundAudio.paused) {
+            backgroundAudio.play();
+            backgroundPlayButton.textContent = "□"; // Update icon when playing
+        } else {
+            backgroundAudio.pause();
+            backgroundPlayButton.textContent = "▶"; // Update icon when paused
         }
-
-        function handlePlayButtonKeyUp(event) {
-            if (event.key === ' ' || event.key === 'Spacebar') {
-                stopForegroundAudio();
-            }
-        }
-
-        function toggleBackgroundAudio() {
-            if (backgroundAudio.paused) {
-                backgroundAudio.play();
-                backgroundPlayButton.textContent = "Pause Background Audio";
-            } else {
-                backgroundAudio.pause();
-                backgroundPlayButton.textContent = "Play Background Audio";
-            }
-        }
-    </script>
+    }
+</script>
 </body>
-
 </html>
