@@ -18,6 +18,11 @@
             color: white;
         }
 
+        #playButton {
+            cursor: pointer;
+            transition: margin 0.2s ease-in-out;
+        }
+
         button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -75,7 +80,7 @@
     </style>
 </head>
 <body>
-    <svg id="playButton" viewBox="0 0 200 200" alt="Play button" style="width: 70vw; max-width: 400px; cursor: pointer;">
+    <svg id="playButton" viewBox="0 0 200 200" alt="Play button" style="width: 70vw; max-width: 400px;">
         <circle cx="100" cy="100" r="90" fill="#555" />
         <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
     </svg>
@@ -109,21 +114,42 @@
         backgroundAudio.loop = true;
 
         // Event listeners for "press and hold to play" feature
-        playButton.addEventListener('mousedown', startForegroundAudio);
-        playButton.addEventListener('mouseup', stopForegroundAudio);
-        playButton.addEventListener('mouseleave', stopForegroundAudio); // Stop if the mouse leaves the button while pressing
-        playButton.addEventListener('touchstart', startForegroundAudio);
-        playButton.addEventListener('touchend', stopForegroundAudio);
+        playButton.addEventListener('mousedown', function(event) {
+            startForegroundAudio(event);
+            playButton.style.margin = "10px 0"; // Pressed effect
+        });
+
+        playButton.addEventListener('mouseup', function() {
+            stopForegroundAudio();
+            playButton.style.margin = "0"; // Reset margin
+        });
+
+        playButton.addEventListener('mouseleave', function() {
+            stopForegroundAudio();
+            playButton.style.margin = "0"; // Reset margin on mouse leave
+        });
+
+        playButton.addEventListener('touchstart', function(event) {
+            startForegroundAudio(event);
+            playButton.style.margin = "10px 0"; // Pressed effect for touch
+        });
+
+        playButton.addEventListener('touchend', function() {
+            stopForegroundAudio();
+            playButton.style.margin = "0"; // Reset margin for touch end
+        });
 
         document.body.addEventListener('keydown', function(event) {
             if (event.key === ' ' || event.key === 'Spacebar') {
                 startForegroundAudio(event);
+                playButton.style.margin = "10px 0"; // Pressed effect for space bar
             }
         });
 
         document.body.addEventListener('keyup', function(event) {
             if (event.key === ' ' || event.key === 'Spacebar') {
                 stopForegroundAudio(event);
+                playButton.style.margin = "0"; // Reset margin for space bar release
             }
         });
 
