@@ -18,25 +18,15 @@
             color: white;
         }
 
-        #playButton, #backgroundPlayButton {
-            position: relative;
-            cursor: pointer;
-            transition: margin 0.2s ease-in-out;
-            background: none;
-            border: none;
-            padding: 0;
+        button {
             margin-top: 20px;
             padding: 10px 20px;
+            border: none;
+            background-color: #555;
+            color: white;
+            cursor: pointer;
             border-radius: 5px;
-        }
-
-        #playButton:focus, #backgroundPlayButton:focus {
-            outline: 2px solid #FFF;
-        }
-
-        #playButton svg, #backgroundPlayButton {
-            width: 70vw;
-            max-width: 400px;
+            transition: background-color 0.3s;
         }
 
         button:hover, button:focus {
@@ -47,23 +37,35 @@
             background-color: #444;
         }
 
-        .volume-slider {
-            display: none;
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            background-color: #555;
-            border-radius: 5px;
-            padding: 5px;
+        #volumeControl {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            user-select: none;
         }
 
-        #playButton:hover .volume-slider, 
-        #backgroundPlayButton:hover .volume-slider,
-        #playButton:focus .volume-slider, 
-        #backgroundPlayButton:focus .volume-slider {
+        #volumeModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: #444;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .volume-slider {
+            margin: 10px 0;
+        }
+
+        .volume-slider label {
             display: block;
+            margin-bottom: 5px;
         }
 
         .volume-slider input[type="range"] {
@@ -73,56 +75,42 @@
     </style>
 </head>
 <body>
-    <button id="playButton" role="button" aria-label="Play foreground audio">
-        <svg viewBox="0 0 200 200" alt="Play button">
-            <circle cx="100" cy="100" r="90" fill="#555" />
-            <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
-        </svg>
+    <svg id="playButton" viewBox="0 0 200 200" alt="Play button" style="width: 70vw; max-width: 400px; cursor: pointer;">
+        <circle cx="100" cy="100" r="90" fill="#555" />
+        <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
+    </svg>
+
+    <button id="backgroundPlayButton">Play Background Audio</button>
+
+    <div id="volumeControl">🔊</div>
+
+    <div id="volumeModal">
         <div class="volume-slider">
+            <label for="foregroundVolume">Foreground Volume</label>
             <input type="range" id="foregroundVolume" min="0" max="1" step="0.01" value="1">
         </div>
-    </button>
-
-    <button id="backgroundPlayButton">Play Background Audio
         <div class="volume-slider">
+            <label for="backgroundVolume">Background Volume</label>
             <input type="range" id="backgroundVolume" min="0" max="1" step="0.01" value="0.5">
         </div>
-    </button>
+    </div>
 
     <script>
         const foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
         const backgroundAudio = new Audio("background.mp3");
         const playButton = document.getElementById('playButton');
         const backgroundPlayButton = document.getElementById('backgroundPlayButton');
+        const volumeControl = document.getElementById('volumeControl');
+        const volumeModal = document.getElementById('volumeModal');
         const foregroundVolumeSlider = document.getElementById('foregroundVolume');
         const backgroundVolumeSlider = document.getElementById('backgroundVolume');
 
         backgroundAudio.volume = 0.5;
         backgroundAudio.loop = true;
 
-        ['mousedown', 'touchstart'].forEach(event => {
-            playButton.addEventListener(event, startForegroundAudio);
-        });
-
-        ['mouseup', 'touchend', 'blur'].forEach(event => {
-            playButton.addEventListener(event, stopForegroundAudio);
-        });
-
-        // Handle spacebar key for playing and stopping
-        document.addEventListener('keydown', function(event) {
-            if (event.key === ' ' || event.key === 'Enter') {
-                event.preventDefault(); // Prevent default scrolling
-                startForegroundAudio(event);
-            }
-        });
-
-        document.addEventListener('keyup', function(event) {
-            if (event.key === ' ' || event.key === 'Enter') {
-                stopForegroundAudio(event);
-            }
-        });
-
+        playButton.addEventListener('click', toggleForegroundAudio);
         backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+        volumeControl.addEventListener('click', toggleVolumeModal);
 
         // Volume control event listeners
         foregroundVolumeSlider.addEventListener('input', function() {
@@ -133,15 +121,12 @@
             backgroundAudio.volume = this.value;
         });
 
-        function startForegroundAudio(e) {
-            e.preventDefault();
-            foregroundAudio.play();
-            playButton.style.margin = "10px 0";
-        }
-
-        function stopForegroundAudio() {
-            foregroundAudio.pause();
-            playButton.style.margin = "0";
+        function toggleForegroundAudio() {
+            if (foregroundAudio.paused) {
+                foregroundAudio.play();
+            } else {
+                foregroundAudio.pause();
+            }
         }
 
         function toggleBackgroundAudio() {
@@ -151,6 +136,14 @@
             } else {
                 backgroundAudio.pause();
                 backgroundPlayButton.textContent = "Play Background Audio";
+            }
+        }
+
+        function toggleVolumeModal() {
+            if (volumeModal.style.display === "none" || volumeModal.style.display === "") {
+                volumeModal.style.display = "block";
+            } else {
+                volumeModal.style.display = "none";
             }
         }
     </script>
