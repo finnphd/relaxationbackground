@@ -1,65 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Audio Player Interface</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+
+        #play {
+            cursor: pointer;
+            transition: margin 0.2s ease-in-out;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #555;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #777;
+        }
+
+        button:active {
+            background-color: #444;
+        }
+
+    </style>
 </head>
+
 <body>
 
-<svg id="play" viewBox="0 0 200 200" style="margin: auto; width: 90vw; height: 90vh">
-<circle cx="100" cy="100" r="100" />
-<polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
-</svg>
+    <svg id="play" viewBox="0 0 200 200" style="width: 70vw; max-width: 400px;">
+        <circle cx="100" cy="100" r="90" fill="#555" />
+        <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
+    </svg>
 
-<button id="backgroundPlayButton">Play Background Audio</button>
+    <button id="backgroundPlayButton">Play Background Audio</button>
 
-<script>
-let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
-let backgroundAudio = new Audio("background.mp3");
-let playButton = document.getElementById('play');
-let backgroundPlayButton = document.getElementById('backgroundPlayButton');
-// Set the background audio volume (from 0 to 1)
-backgroundAudio.volume = 0.5;
+    <script>
+        let foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
+        let backgroundAudio = new Audio("background.mp3");
+        let playButton = document.getElementById('play');
+        let backgroundPlayButton = document.getElementById('backgroundPlayButton');
 
-// Ensure the background audio loops infinitely
-backgroundAudio.loop = true;
+        // Set the background audio volume (from 0 to 1)
+        backgroundAudio.volume = 0.5;
 
-playButton.addEventListener('mousedown', startForegroundAudio);
-playButton.addEventListener('mouseup', stopForegroundAudio);
-playButton.addEventListener('touchstart', startForegroundAudio);
-playButton.addEventListener('touchend', stopForegroundAudio);
-playButton.addEventListener('keydown', function (event) {
-    if (event.key === ' ' || event.key === 'Spacebar') {
-        startForegroundAudio(event);
-    }
-});
-playButton.addEventListener('keyup', function (event) {
-    if (event.key === ' ' || event.key === 'Spacebar') {
-        stopForegroundAudio(event);
-    }
-});
+        // Ensure the background audio loops infinitely
+        backgroundAudio.loop = true;
 
-backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+        playButton.addEventListener('mousedown', startForegroundAudio);
+        playButton.addEventListener('mouseup', stopForegroundAudio);
+        playButton.addEventListener('touchstart', startForegroundAudio);
+        playButton.addEventListener('touchend', stopForegroundAudio);
+        playButton.addEventListener('keydown', function(event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                startForegroundAudio(event);
+            }
+        });
+        playButton.addEventListener('keyup', function(event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                stopForegroundAudio(event);
+            }
+        });
 
-function startForegroundAudio(e) {
-    e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
-    foregroundAudio.play();
-    playButton.style.margin = "10px";
-}
+        backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
 
-function stopForegroundAudio() {
-    foregroundAudio.pause();
-    playButton.style.margin = "0";
-}
+        function startForegroundAudio(e) {
+            e.preventDefault(); // Prevent the default behavior to avoid issues with spacebar press
+            foregroundAudio.play();
+            playButton.style.margin = "10px 0";
+        }
 
-function toggleBackgroundAudio() {
-    if (backgroundAudio.paused) {
-        backgroundAudio.play();
-        backgroundPlayButton.textContent = "Pause Background Audio";
-    } else {
-        backgroundAudio.pause();
-        backgroundPlayButton.textContent = "Play Background Audio";
-    }
-}
-</script>
+        function stopForegroundAudio() {
+            foregroundAudio.pause();
+            playButton.style.margin = "0";
+        }
+
+        function toggleBackgroundAudio() {
+            if (backgroundAudio.paused) {
+                backgroundAudio.play();
+                backgroundPlayButton.textContent = "Pause Background Audio";
+            } else {
+                backgroundAudio.pause();
+                backgroundPlayButton.textContent = "Play Background Audio";
+            }
+        }
+    </script>
 </body>
+
 </html>
