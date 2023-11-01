@@ -108,7 +108,25 @@
         backgroundAudio.volume = 0.5;
         backgroundAudio.loop = true;
 
-        playButton.addEventListener('click', toggleForegroundAudio);
+        // Event listeners for "press and hold to play" feature
+        playButton.addEventListener('mousedown', startForegroundAudio);
+        playButton.addEventListener('mouseup', stopForegroundAudio);
+        playButton.addEventListener('mouseleave', stopForegroundAudio); // Stop if the mouse leaves the button while pressing
+        playButton.addEventListener('touchstart', startForegroundAudio);
+        playButton.addEventListener('touchend', stopForegroundAudio);
+
+        document.body.addEventListener('keydown', function(event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                startForegroundAudio(event);
+            }
+        });
+
+        document.body.addEventListener('keyup', function(event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                stopForegroundAudio(event);
+            }
+        });
+
         backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
         volumeControl.addEventListener('click', toggleVolumeModal);
 
@@ -121,10 +139,15 @@
             backgroundAudio.volume = this.value;
         });
 
-        function toggleForegroundAudio() {
+        function startForegroundAudio(e) {
+            e.preventDefault(); // Prevent default behavior, especially for spacebar
             if (foregroundAudio.paused) {
                 foregroundAudio.play();
-            } else {
+            }
+        }
+
+        function stopForegroundAudio() {
+            if (!foregroundAudio.paused) {
                 foregroundAudio.pause();
             }
         }
