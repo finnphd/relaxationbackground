@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Responsive Hypnosis</title>
+    <title>Responsive Relaxation</title>
     <link rel="icon" href="logo.svg" type="image/svg+xml">
     <style>
         body {
@@ -148,8 +148,55 @@
 
         let wakeLock = null;
 
-        // Your existing event listeners and functions
+        backgroundAudio.volume = 0.5;
+        backgroundAudio.loop = true;
 
+        playButton.addEventListener('mousedown', function(event) {
+            startForegroundAudio(event);
+            playButton.style.margin = "10px 0";
+            requestWakeLock();
+        });
+
+        playButton.addEventListener('mouseup', function() {
+            stopForegroundAudio();
+            playButton.style.margin = "0";
+            releaseWakeLock();
+        });
+
+        playButton.addEventListener('mouseleave', function() {
+            stopForegroundAudio();
+            playButton.style.margin = "0";
+            releaseWakeLock();
+        });
+
+        playButton.addEventListener('touchstart', function(event) {
+            startForegroundAudio(event);
+            playButton.style.margin = "10px 0";
+            requestWakeLock();
+        });
+
+        playButton.addEventListener('touchend', function() {
+            stopForegroundAudio();
+            playButton.style.margin = "0";
+            releaseWakeLock();
+        });
+
+        document.body.addEventListener('keydown', function(event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                startForegroundAudio(event);
+                playButton.style.margin = "10px 0";
+            }
+        });
+
+        document.body.addEventListener('keyup', function(event) {
+            if (event.key === ' ' || event.key === 'Spacebar') {
+                stopForegroundAudio(event);
+                playButton.style.margin = "0";
+            }
+        });
+
+        backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
+        volumeControl.addEventListener('click', toggleVolumeModal);
         audioSelectionButton.addEventListener('click', function() {
             audioSelectionModal.style.display = 'block';
         });
@@ -164,7 +211,53 @@
             audioSelectionModal.style.display = 'none';
         }
 
-        // Rest of your existing script
+        function toggleBackgroundAudio() {
+            if (backgroundAudio.paused) {
+                backgroundAudio.play();
+                backgroundPlayButton.textContent = "Pause Background Audio";
+            } else {
+                backgroundAudio.pause();
+                backgroundPlayButton.textContent = "Play Background Audio";
+            }
+        }
+
+        function toggleVolumeModal() {
+            if (volumeModal.style.display === "none" || volumeModal.style.display === "") {
+                volumeModal.style.display = "block";
+            } else {
+                volumeModal.style.display = "none";
+            }
+        }
+
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator && !wakeLock) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.error(`Failed to acquire wake lock: ${err.message}`);
+            }
+        }
+
+        async function releaseWakeLock() {
+            if (wakeLock != null) {
+                await wakeLock.release();
+                wakeLock = null;
+            }
+        }
+
+        function startForegroundAudio(e) {
+            e.preventDefault();
+            if (foregroundAudio.paused) {
+                foregroundAudio.play();
+            }
+        }
+
+        function stopForegroundAudio() {
+            if (!foregroundAudio.paused) {
+                foregroundAudio.pause();
+            }
+        }
     </script>
 </body>
 </html>
