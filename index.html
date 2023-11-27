@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Responsive Relaxation</title>
+    <title>Audio Player Interface with Enhanced Browser Compatibility and Audio Selection</title>
     <link rel="icon" href="logo.svg" type="image/svg+xml">
     <style>
         body {
@@ -134,7 +134,10 @@
 
     <script>
         const foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
+        foregroundAudio.loop = true;
         const backgroundAudio = new Audio("background.mp3");
+        backgroundAudio.loop = true;
+
         const playButton = document.getElementById('playButton');
         const backgroundPlayButton = document.getElementById('backgroundPlayButton');
         const audioSelectionButton = document.getElementById('audioSelectionButton');
@@ -148,50 +151,48 @@
 
         let wakeLock = null;
 
-        backgroundAudio.volume = 0.5;
-        backgroundAudio.loop = true;
-
+        // Event listeners for "press and hold to play" feature
         playButton.addEventListener('mousedown', function(event) {
             startForegroundAudio(event);
-            playButton.style.margin = "10px 0";
+            playButton.style.margin = "10px 0"; // Pressed effect
             requestWakeLock();
         });
 
         playButton.addEventListener('mouseup', function() {
             stopForegroundAudio();
-            playButton.style.margin = "0";
+            playButton.style.margin = "0"; // Reset margin
             releaseWakeLock();
         });
 
         playButton.addEventListener('mouseleave', function() {
             stopForegroundAudio();
-            playButton.style.margin = "0";
+            playButton.style.margin = "0"; // Reset margin on mouse leave
             releaseWakeLock();
         });
 
         playButton.addEventListener('touchstart', function(event) {
             startForegroundAudio(event);
-            playButton.style.margin = "10px 0";
+            playButton.style.margin = "10px 0"; // Pressed effect for touch
             requestWakeLock();
         });
 
         playButton.addEventListener('touchend', function() {
             stopForegroundAudio();
-            playButton.style.margin = "0";
+            playButton.style.margin = "0"; // Reset margin for touch end
             releaseWakeLock();
         });
 
         document.body.addEventListener('keydown', function(event) {
             if (event.key === ' ' || event.key === 'Spacebar') {
                 startForegroundAudio(event);
-                playButton.style.margin = "10px 0";
+                playButton.style.margin = "10px 0"; // Pressed effect for space bar
             }
         });
 
         document.body.addEventListener('keyup', function(event) {
             if (event.key === ' ' || event.key === 'Spacebar') {
                 stopForegroundAudio(event);
-                playButton.style.margin = "0";
+                playButton.style.margin = "0"; // Reset margin for space bar release
             }
         });
 
@@ -201,14 +202,25 @@
             audioSelectionModal.style.display = 'block';
         });
 
-        function applyAudioSelection() {
-            const selectedForegroundAudio = foregroundAudioSelect.value;
-            const selectedBackgroundAudio = backgroundAudioSelect.value;
+        foregroundVolumeSlider.addEventListener('input', function() {
+            foregroundAudio.volume = this.value;
+        });
 
-            foregroundAudio.src = selectedForegroundAudio;
-            backgroundAudio.src = selectedBackgroundAudio;
+        backgroundVolumeSlider.addEventListener('input', function() {
+            backgroundAudio.volume = this.value;
+        });
 
-            audioSelectionModal.style.display = 'none';
+        function startForegroundAudio(e) {
+            e.preventDefault(); // Prevent default behavior, especially for spacebar
+            if (foregroundAudio.paused) {
+                foregroundAudio.play();
+            }
+        }
+
+        function stopForegroundAudio() {
+            if (!foregroundAudio.paused) {
+                foregroundAudio.pause();
+            }
         }
 
         function toggleBackgroundAudio() {
@@ -229,6 +241,16 @@
             }
         }
 
+        function applyAudioSelection() {
+            const selectedForegroundAudio = foregroundAudioSelect.value;
+            const selectedBackgroundAudio = backgroundAudioSelect.value;
+
+            foregroundAudio.src = selectedForegroundAudio;
+            backgroundAudio.src = selectedBackgroundAudio;
+
+            audioSelectionModal.style.display = 'none';
+        }
+
         async function requestWakeLock() {
             try {
                 if ('wakeLock' in navigator && !wakeLock) {
@@ -243,19 +265,6 @@
             if (wakeLock != null) {
                 await wakeLock.release();
                 wakeLock = null;
-            }
-        }
-
-        function startForegroundAudio(e) {
-            e.preventDefault();
-            if (foregroundAudio.paused) {
-                foregroundAudio.play();
-            }
-        }
-
-        function stopForegroundAudio() {
-            if (!foregroundAudio.paused) {
-                foregroundAudio.pause();
             }
         }
     </script>
