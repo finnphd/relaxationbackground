@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Audio Player Interface</title>
+    <title>Audio Player Interface with Wake Lock</title>
     <link rel="icon" href="logo.svg" type="image/svg+xml"> <!-- SVG Favicon -->
     <style>
         body {
@@ -110,6 +110,8 @@
         const foregroundVolumeSlider = document.getElementById('foregroundVolume');
         const backgroundVolumeSlider = document.getElementById('backgroundVolume');
 
+        let wakeLock = null;
+
         backgroundAudio.volume = 0.5;
         backgroundAudio.loop = true;
 
@@ -117,26 +119,31 @@
         playButton.addEventListener('mousedown', function(event) {
             startForegroundAudio(event);
             playButton.style.margin = "10px 0"; // Pressed effect
+            requestWakeLock();
         });
 
         playButton.addEventListener('mouseup', function() {
             stopForegroundAudio();
             playButton.style.margin = "0"; // Reset margin
+            releaseWakeLock();
         });
 
         playButton.addEventListener('mouseleave', function() {
             stopForegroundAudio();
             playButton.style.margin = "0"; // Reset margin on mouse leave
+            releaseWakeLock();
         });
 
         playButton.addEventListener('touchstart', function(event) {
             startForegroundAudio(event);
             playButton.style.margin = "10px 0"; // Pressed effect for touch
+            requestWakeLock();
         });
 
         playButton.addEventListener('touchend', function() {
             stopForegroundAudio();
             playButton.style.margin = "0"; // Reset margin for touch end
+            releaseWakeLock();
         });
 
         document.body.addEventListener('keydown', function(event) {
@@ -164,6 +171,23 @@
         backgroundVolumeSlider.addEventListener('input', function() {
             backgroundAudio.volume = this.value;
         });
+
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator && !wakeLock) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.error(`Failed to acquire wake lock: ${err.message}`);
+            }
+        }
+
+        async function releaseWakeLock() {
+            if (wakeLock != null) {
+                await wakeLock.release();
+                wakeLock = null;
+            }
+        }
 
         function startForegroundAudio(e) {
             e.preventDefault(); // Prevent default behavior, especially for spacebar
