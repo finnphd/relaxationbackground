@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Audio Player Interface with Wake Lock</title>
-    <link rel="icon" href="logo.svg" type="image/svg+xml"> <!-- SVG Favicon -->
+    <title>Audio Player Interface with Enhanced Browser Compatibility</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -163,15 +163,6 @@
         backgroundPlayButton.addEventListener('click', toggleBackgroundAudio);
         volumeControl.addEventListener('click', toggleVolumeModal);
 
-        // Volume control event listeners
-        foregroundVolumeSlider.addEventListener('input', function() {
-            foregroundAudio.volume = this.value;
-        });
-
-        backgroundVolumeSlider.addEventListener('input', function() {
-            backgroundAudio.volume = this.value;
-        });
-
         async function requestWakeLock() {
             try {
                 if ('wakeLock' in navigator && !wakeLock) {
@@ -188,6 +179,29 @@
                 wakeLock = null;
             }
         }
+
+        function canControlVolume(audioElement) {
+            let canControl = true;
+            try {
+                audioElement.volume = 0.5;
+            } catch (e) {
+                canControl = false;
+            }
+            return canControl;
+        }
+
+        function adjustVolumeListeners(audioElement, sliderElement) {
+            if (canControlVolume(audioElement)) {
+                sliderElement.addEventListener('input', function() {
+                    audioElement.volume = this.value;
+                });
+            } else {
+                sliderElement.style.display = 'none';
+            }
+        }
+
+        adjustVolumeListeners(foregroundAudio, foregroundVolumeSlider);
+        adjustVolumeListeners(backgroundAudio, backgroundVolumeSlider);
 
         function startForegroundAudio(e) {
             e.preventDefault(); // Prevent default behavior, especially for spacebar
