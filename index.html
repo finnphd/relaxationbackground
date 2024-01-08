@@ -213,12 +213,27 @@ function handleTouchEnd() {
         });
 
         foregroundVolumeSlider.addEventListener('input', function() {
+    // Check if changing the volume directly is allowed
+    if (typeof foregroundAudio.volume === 'number') {
+        foregroundAudio.volume = this.value;
+    } else {
+        // Fallback: Play a silent sound to enable volume control
+        foregroundAudio.play().then(() => {
             foregroundAudio.volume = this.value;
-        });
+        }).catch(err => console.error('Error playing audio:', err));
+    }
+});
 
-        backgroundVolumeSlider.addEventListener('input', function() {
+backgroundVolumeSlider.addEventListener('input', function() {
+    // Similar check and fallback for background audio
+    if (typeof backgroundAudio.volume === 'number') {
+        backgroundAudio.volume = this.value;
+    } else {
+        backgroundAudio.play().then(() => {
             backgroundAudio.volume = this.value;
-        });
+        }).catch(err => console.error('Error playing audio:', err));
+    }
+});
 
        function startForegroundAudio(e) {
             e.preventDefault(); // Prevent default behavior, especially for spacebar
