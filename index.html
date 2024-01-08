@@ -91,6 +91,8 @@
     </style>
 </head>
 <body>
+      <script src="https://cdn.jsdelivr.net/npm/nosleep.js/dist/NoSleep.min.js"></script>
+
     <svg id="playButton" viewBox="0 0 200 200" alt="Play button" style="width: 70vw; max-width: 400px;">
         <circle cx="100" cy="100" r="90" fill="#555" />
         <polygon fill="#FFFFFF" points="146.5,100 71.5,56.7 71.5,143.3" />
@@ -133,6 +135,8 @@
     </div>
 
     <script>
+         let noSleep = new NoSleep();
+
         const foregroundAudio = new Audio("Responsive Hypnosis Example.mp3");
         foregroundAudio.loop = true;
         const backgroundAudio = new Audio("background.mp3");
@@ -210,16 +214,18 @@
             backgroundAudio.volume = this.value;
         });
 
-        function startForegroundAudio(e) {
+       function startForegroundAudio(e) {
             e.preventDefault(); // Prevent default behavior, especially for spacebar
             if (foregroundAudio.paused) {
                 foregroundAudio.play();
+                noSleep.enable();
             }
-        }
 
+      
         function stopForegroundAudio() {
             if (!foregroundAudio.paused) {
                 foregroundAudio.pause();
+                noSleep.disable(); 
             }
         }
 
