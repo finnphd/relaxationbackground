@@ -173,18 +173,24 @@
             playButton.style.margin = "0"; // Reset margin on mouse leave
             releaseWakeLock();
         });
+        
+playButton.addEventListener('touchstart', function(event) {
+    startForegroundAudio(event);
+    playButton.style.margin = "10px 0"; // Pressed effect for touch
+    requestWakeLock();
+}, { passive: false }); // Set as non-passive listener
 
-        playButton.addEventListener('touchstart', function(event) {
-            startForegroundAudio(event);
-            playButton.style.margin = "10px 0"; // Pressed effect for touch
-            requestWakeLock();
-        });
+        
+playButton.addEventListener('touchend', handleTouchEnd, { passive: false });
+playButton.addEventListener('touchcancel', handleTouchEnd, { passive: false }); // Handle touchcancel
 
-        playButton.addEventListener('touchend', function() {
-            stopForegroundAudio();
-            playButton.style.margin = "0"; // Reset margin for touch end
-            releaseWakeLock();
-        });
+function handleTouchEnd() {
+    stopForegroundAudio();
+    playButton.style.margin = "0"; // Reset margin for touch end
+    releaseWakeLock();
+}
+
+
 
         document.body.addEventListener('keydown', function(event) {
             if (event.key === ' ' || event.key === 'Spacebar') {
